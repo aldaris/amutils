@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git;a=blob_plain;f=wicket-core/src/main/resources/META-INF/wicket-1.5.xsd;hb=master">
+    <head>
+        <title><wicket:message key="page.title"></wicket:message></title>
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+            }
+            @media (max-width: 979px) {
+                body {
+                    padding-top: 0px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div wicket:id="navbar"></div>
+        </div>
+        <wicket:child/>
+    </body>
+</html>
