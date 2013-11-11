@@ -63,7 +63,14 @@ public class JCEEncryption {
     }
 
     public String decrypt(String encText) {
-        return new String(pbeDecrypt(Base64.decode(encText)), Charset.forName("UTF-8"));
+        byte[] decoded = Base64.decode(encText);
+        if (decoded != null) {
+            byte[] decrypted = pbeDecrypt(decoded);
+            if (decrypted != null) {
+                return new String(decrypted, Charset.forName("UTF-8"));
+            }
+        }
+        return "Invalid input";
     }
 
     private byte[] pbeEncrypt(byte[] clearText) {
