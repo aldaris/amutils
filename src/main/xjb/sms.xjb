@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<xml-java-binding-schema xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
+  <options package="org.forgerock.amutils.sms" />
+  <xjc:serializable/>
+</xml-java-binding-schema>
