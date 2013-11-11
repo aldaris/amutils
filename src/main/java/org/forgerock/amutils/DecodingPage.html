@@ -6,37 +6,35 @@
     </head>
     <body>
         <wicket:extend>
-            <div class="container">
-                <h4>Decode session ID</h4>
-                <form wicket:id="session">
-                    <input type="text" wicket:id="sessionId" placeholder="Session ID" required="required" />
-                    <input type="submit" class="btn" wicket:id="sessionButton" value="Submit" />
-                </form>
-                <div wicket:id="sessionResult"></div>
-                <h4>Encryption/Decryption</h4>
-                <form wicket:id="crypt">
-                    <div class="control-group">
-                        <label class="control-label" for="encryptionKey"><wicket:message key="encryption.key"></wicket:message></label>
-                        <div class="controls">
-                            <input type="text" wicket:id="encryptionKey" placeholder="Encryption Key" required="required" />
-                        </div>
+            <h4>Decode session ID</h4>
+            <form wicket:id="session">
+                <input type="text" wicket:id="sessionId" placeholder="Session ID" required="required" />
+                <input type="submit" class="btn" wicket:id="sessionButton" value="Submit" />
+            </form>
+            <div wicket:id="sessionResult"></div>
+            <h4>Encryption/Decryption</h4>
+            <form wicket:id="crypt">
+                <div class="control-group">
+                    <label class="control-label" for="encryptionKey"><wicket:message key="encryption.key"></wicket:message></label>
+                    <div class="controls">
+                        <input type="text" wicket:id="encryptionKey" placeholder="Encryption Key" required="required" />
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="text"><wicket:message key="data"></wicket:message></label>
-                        <div class="controls">
-                            <textarea wicket:id="text" placeholder="Encrypted/plain content" required="required"></textarea>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="controls">
-                            <input type="button" class="btn" wicket:id="encryptButton" value="Encrypt" />
-                            <input type="button" class="btn" wicket:id="decryptButton" value="Decrypt" />
-                        </div>
-                    </div>
-                </form>
-                <div>
-                    <pre wicket:id="cryptResult"></pre>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="text"><wicket:message key="data"></wicket:message></label>
+                    <div class="controls">
+                        <textarea wicket:id="text" placeholder="Encrypted/plain content" required="required"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="button" class="btn" wicket:id="encryptButton" value="Encrypt" />
+                        <input type="button" class="btn" wicket:id="decryptButton" value="Decrypt" />
+                    </div>
+                </div>
+            </form>
+            <div>
+                <pre wicket:id="cryptResult"></pre>
             </div>
         </wicket:extend>
     </body>
