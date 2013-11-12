@@ -40,6 +40,7 @@ public class WicketApplication extends WebApplication {
     public void init() {
         super.init();
         getMarkupSettings().setStripWicketTags(true);
+        mountPage("/config", ConfigPage.class);
         Bootstrap.install(this, new BootstrapSettings());
     }
 }

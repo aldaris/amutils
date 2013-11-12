@@ -19,7 +19,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -43,10 +43,15 @@ public class TemplatePage extends WebPage {
         Navbar navbar = new Navbar("navbar");
         navbar.setPosition(Navbar.Position.TOP);
         navbar.fluid();
-        navbar.brandName(new StringResourceModel("project.name", this, null));
+        navbar.brandName(localize("project.name"));
 
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                new NavbarButton<DecodingPage>(DecodingPage.class, Model.of("Decoding"))));
+                new NavbarButton<DecodingPage>(DecodingPage.class, localize("navbar.decoding")),
+                new NavbarButton<ConfigPage>(ConfigPage.class, localize("navbar.config"))));
         add(navbar);
+    }
+
+    protected IModel<String> localize(String property) {
+        return new StringResourceModel(property, this, null);
     }
 }
