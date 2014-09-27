@@ -1,5 +1,4 @@
-<?xml version="1.0" ?>
-<!--
+/*
  * The contents of this file are subject to the terms of the Common Development and
  * Distribution License (the License). You may not use this file except in compliance with the
  * License.
@@ -13,8 +12,24 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2014 ForgeRock AS.
--->
-<xml-java-binding-schema xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
-    <options package="org.forgerock.amutils.sms" />
-    <xjc:serializable/>
-</xml-java-binding-schema>
+ */
+package org.forgerock.openam.amutils.config;
+
+import java.util.List;
+import org.apache.wicket.util.collections.MultiMap;
+import org.forgerock.amutils.sms.AttributeValuePair;
+import org.forgerock.amutils.sms.Value;
+
+public abstract class ServiceProcessor {
+
+    protected final MultiMap processAttributes(List<AttributeValuePair> attributes) {
+        MultiMap<String, String> attrs = new MultiMap<>();
+        for (AttributeValuePair avPair : attributes) {
+            String key = avPair.getAttribute().getName();
+            for (Value value : avPair.getValue()) {
+                attrs.addValue(key, value.getvalue());
+            }
+        }
+        return attrs;
+    }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git;a=blob_plain;f=wicket-core/src/main/resources/META-INF/wicket-1.5.xsd;hb=master">
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <wicket:extend>
+            <h4>Decode session ID</h4>
+            <form wicket:id="session">
+                <div class="form-group">
+                    <label class="sr-only" for="sessionId">Session ID</label>
+                    <input type="text" id="sessionId" class="form-control long-text" wicket:id="sessionId" placeholder="Session ID" required="required" />
+                </div>
+                <input type="submit" class="btn btn-default" wicket:id="sessionButton" value="Decode" />
+            </form>
+            <div wicket:id="wmc">
+                <ul class="unstyled">
+                    <li wicket:id="extensions">
+                        <span wicket:id="extension"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <h4>Bootstrap decode</h4>
+            <form wicket:id="bootstrap">
+                <div class="form-group">
+                    <textarea class="form-control long-text" wicket:id="bootstrapContent" placeholder="Bootstrap content" required="required" />
+                    <input type="submit" class="btn btn-default" wicket:id="parse" value="Decode" />
+                </div>
+            </form>
+            <div wicket:id="bootstrapContainer">
+                <table class="table horizontal-table">
+                    <tr>
+                        <th>Directory Server</th>
+                        <th>Deployment Url</th>
+                        <th>Admin User</th>
+                        <th>Admin Pass</th>
+                        <th>Base DN</th>
+                        <th>Directory User</th>
+                        <th>Directory Pass</th>
+                    </tr>
+                    <tr wicket:id="servers">
+                        <td wicket:id="directoryServer"></td>
+                        <td wicket:id="deploymentUrl"></td>
+                        <td wicket:id="adminUser"></td>
+                        <td wicket:id="adminPassword"></td>
+                        <td wicket:id="baseDN"></td>
+                        <td wicket:id="directoryUser"></td>
+                        <td wicket:id="directoryPassword"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <h4>Encryption/Decryption</h4>
+            <form wicket:id="crypto">
+                <div class="form-group">
+                    <label for="encryptionKey"><wicket:message key="encryption.key"></wicket:message></label>
+                    <div class="form-inline">
+                        <input type="text" class="form-control long-text" id="encryptionKey" wicket:id="encryptionKey" placeholder="Encryption Key" required="required" />
+                        <a wicket:id="defaultKey"><wicket:message key="default.encryption.key" /></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="text"><wicket:message key="data"></wicket:message></label>
+                    <textarea id="text" wicket:id="text" class="form-control" placeholder="Encrypted/plain content" required="required"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="button" class="btn btn-default" wicket:id="encryptButton" value="Encrypt" />
+                    <input type="button" class="btn btn-default" wicket:id="decryptButton" value="Decrypt" />
+                </div>
+            </form>
+            <div class="form-group">
+                <pre wicket:id="cryptoResult"></pre>
+            </div>
+        </wicket:extend>
+    </body>
+</html>

@@ -1,6 +1,4 @@
 /*
- * Copyright 2013 ForgeRock AS.
- *
  * The contents of this file are subject to the terms of the Common Development and
  * Distribution License (the License). You may not use this file except in compliance with the
  * License.
@@ -12,20 +10,23 @@
  * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
+ *
+ * Copyright 2013-2014 ForgeRock AS.
  */
-package org.forgerock.amutils;
+package org.forgerock.amutils.web.wicket;
 
 import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.settings.ActiveThemeProvider;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
+import de.agilecoders.wicket.core.settings.DefaultThemeProvider;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
+import org.forgerock.amutils.web.config.ConfigPage;
+import org.forgerock.amutils.web.codec.DecodingPage;
 
-/**
- * Application object for your web application. If you want to run this
- * application without deploying, run the Start class.
- *
- * @see org.forgerock.Start#main(String[])
- */
 public class WicketApplication extends WebApplication {
 
     @Override
@@ -33,14 +34,18 @@ public class WicketApplication extends WebApplication {
         return DecodingPage.class;
     }
 
-    /**
-     * @see org.apache.wicket.Application#init()
-     */
     @Override
     public void init() {
-        super.init();
+        BootstrapSettings bootstrapSettings = new BootstrapSettings();
+        bootstrapSettings.useCdnResources(true);
+        Bootstrap.install(this, bootstrapSettings);
         getMarkupSettings().setStripWicketTags(true);
+
         mountPage("/config", ConfigPage.class);
-        Bootstrap.install(this, new BootstrapSettings());
+    }
+
+    @Override
+    public Session newSession(Request request, Response response) {
+        return new ConfigAwareSession(request);
     }
 }

@@ -1,0 +1,7 @@
+body { padding-top: 60px; }
+
+.long-text { width: 500px !important; }
+
+.horizontal-table tr { float: left; }
+.horizontal-table tr th { display: block; }
+.horizontal-table tr td { display: block; }

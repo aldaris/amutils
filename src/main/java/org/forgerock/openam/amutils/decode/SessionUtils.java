@@ -25,9 +25,8 @@
  * $Id: SessionID.java,v 1.10 2009/10/02 23:45:42 qcheng Exp $
  *
  */
-
 /**
- * Portions Copyrighted 2011-2013 ForgeRock AS
+ * Portions Copyrighted 2011-2014 ForgeRock AS
  */
 package org.forgerock.openam.amutils.decode;
 
@@ -35,16 +34,15 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import org.forgerock.amutils.tools.Base64;
 
-/**
- *
- * @author aldaris
- */
 public class SessionUtils {
 
     private static final String S1 = "S1";
@@ -53,19 +51,23 @@ public class SessionUtils {
     private static final String SERVER_ID = "Server ID";
     private static final String SITE_ID = "Site ID";
     private static final String STORAGE_KEY = "Storage Key";
+    private static final List<String> INVALID_FORMAT = Arrays.asList(new String[]{"Invalid Session ID"});
 
-    public static Map<String, String> getExtensions(String sid) {
-        Map<String, String> results = new LinkedHashMap<>();
+    public static List<String> getReadableExtensions(String sid) {
+        List<String> results = new ArrayList<>(3);
         if (sid == null) {
-            return Collections.EMPTY_MAP;
+            return INVALID_FORMAT;
         }
         try {
-            if (sid.indexOf("*") != -1) {
+            if (sid.contains("%")) {
+                sid = URLDecoder.decode(sid, "UTF-8");
+            }
+            if (sid.contains("*")) {
                 sid = c66DecodeCookieString(sid);
             }
             int outerIndex = sid.lastIndexOf("@");
             if (outerIndex == -1) {
-                return Collections.EMPTY_MAP;
+                return INVALID_FORMAT;
             }
 
             String outer = sid.substring(outerIndex + 1);
@@ -73,7 +75,8 @@ public class SessionUtils {
 
             if (tailIndex != -1) {
                 String extensionPart = outer.substring(0, tailIndex);
-                DataInputStream extensionStr = new DataInputStream(new ByteArrayInputStream(Base64.decode(extensionPart)));
+                DataInputStream extensionStr = new DataInputStream(new ByteArrayInputStream(
+                        Base64.getDecoder().decode(extensionPart)));
                 Map<String, String> extMap = new HashMap<>();
 
                 while (true) {
@@ -90,16 +93,17 @@ public class SessionUtils {
                 String siteID = extMap.get(SI);
                 String storageKey = extMap.get(SK);
                 if (primaryID == null) {
-                    results.put(SERVER_ID, siteID);
+                    results.add(SERVER_ID + ": " + siteID);
                 } else {
-                    results.put(SERVER_ID, primaryID);
-                    results.put(SITE_ID, siteID);
+                    results.add(SERVER_ID + ": " + primaryID);
+                    results.add(SITE_ID + ": " + siteID);
                 }
                 if (storageKey != null) {
-                    results.put(STORAGE_KEY, storageKey);
+                    results.add(STORAGE_KEY + ": " + storageKey);
                 }
             }
         } catch (IOException ioe) {
+            return INVALID_FORMAT;
         }
         return results;
     }

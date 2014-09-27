@@ -1,5 +1,4 @@
-<?xml version="1.0" ?>
-<!--
+/*
  * The contents of this file are subject to the terms of the Common Development and
  * Distribution License (the License). You may not use this file except in compliance with the
  * License.
@@ -13,8 +12,26 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2014 ForgeRock AS.
--->
-<xml-java-binding-schema xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
-    <options package="org.forgerock.amutils.sms" />
-    <xjc:serializable/>
-</xml-java-binding-schema>
+ */
+package org.forgerock.amutils.web.wicket;
+
+import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
+import org.forgerock.openam.amutils.config.AMConfig;
+
+public class ConfigAwareSession extends WebSession {
+
+    private AMConfig config;
+
+    public ConfigAwareSession(Request request) {
+        super(request);
+    }
+
+    public AMConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(AMConfig config) {
+        this.config = config;
+    }
+}

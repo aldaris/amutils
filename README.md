@@ -4,6 +4,7 @@ The purpose of this application is to ease the debugging process of OpenAM by pr
 Currently implemented:
 
 * Session decoding (retrieving server/site ID and storage key)
+* Bootstrap file content processing
 * Symmetric Encryption/decryption using the OpenAM encryption key
 
 Future plans:
@@ -16,6 +17,7 @@ In order to run this application just execute the following command:
 
     mvn jetty:run
 
+This project requires JDK8, so make sure you have JAVA\_HOME properly set up before running the mvn command.
 The application should be up and running at http://localhost:7000
 
 ## License

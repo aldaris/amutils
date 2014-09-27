@@ -22,20 +22,22 @@
  *
  */
 /*
- * Portions Copyrighted 2010-2013 ForgeRock AS
+ * Portions Copyrighted 2010-2014 ForgeRock AS
  */
 package org.forgerock.openam.amutils.decode;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import org.forgerock.amutils.tools.Base64;
 
 public class JCEEncryption {
 
+    public static final String DEFAULT_PASSWORD = "KmhUnWR1MYWDYW4xuqdF5nbm+CXIyOVt";
+    public static final JCEEncryption DEFAULT = new JCEEncryption(DEFAULT_PASSWORD);
     private static final byte VERSION = 1;
     private static final String CRYPTO_DESCRIPTOR = "PBEWithMD5AndDES";
     private static final String CRYPTO_DESCRIPTOR_PROVIDER = "SunJCE";
@@ -59,16 +61,17 @@ public class JCEEncryption {
     }
 
     public String encrypt(String clearText) {
-        return Base64.encodeToString(pbeEncrypt(clearText.getBytes(Charset.forName("UTF-8"))), false);
+        return Base64.getEncoder().encodeToString(pbeEncrypt(clearText.getBytes(Charset.forName("UTF-8"))));
     }
 
     public String decrypt(String encText) {
-        byte[] decoded = Base64.decode(encText);
-        if (decoded != null) {
+        try {
+            byte[] decoded = Base64.getDecoder().decode(encText);
             byte[] decrypted = pbeDecrypt(decoded);
             if (decrypted != null) {
                 return new String(decrypted, Charset.forName("UTF-8"));
             }
+        } catch (IllegalArgumentException iae) {
         }
         return "Invalid input";
     }
@@ -85,7 +88,7 @@ public class JCEEncryption {
                 type[1] = (byte) DEFAULT_ENC_ALG_INDEX;
                 type[0] = (byte) DEFAULT_KEYGEN_ALG_INDEX;
 
-                Cipher pbeCipher = null;
+                Cipher pbeCipher;
                 pbeCipher = Cipher.getInstance(CRYPTO_DESCRIPTOR, CRYPTO_DESCRIPTOR_PROVIDER);
 
                 if (pbeCipher != null) {
