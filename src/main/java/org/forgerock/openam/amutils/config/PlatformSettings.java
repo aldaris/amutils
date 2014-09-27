@@ -24,6 +24,7 @@ import org.apache.wicket.util.collections.MultiMap;
 import org.forgerock.amutils.sms.GlobalConfiguration;
 import org.forgerock.amutils.sms.Service;
 import org.forgerock.amutils.sms.SubConfiguration;
+
 import static org.forgerock.openam.amutils.config.ConfigConstants.SERVERS;
 
 public class PlatformSettings {

@@ -7,8 +7,12 @@
     <body>
         <wicket:extend>
             <form wicket:id="uploadForm">
-                <input wicket:id="configUpload" type="file" />
-                <input type="submit" class="btn btn-default" value="Upload!" />
+                <div class="form-group">
+                    <input wicket:id="configUpload" type="file" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default" value="Upload!" />
+                </div>
                 <span wicket:id="progress"></span>
             </form>
             <div wicket:id="configPanel"></div>

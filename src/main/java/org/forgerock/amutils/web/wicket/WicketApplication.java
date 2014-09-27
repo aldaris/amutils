@@ -16,9 +16,7 @@
 package org.forgerock.amutils.web.wicket;
 
 import de.agilecoders.wicket.core.Bootstrap;
-import de.agilecoders.wicket.core.settings.ActiveThemeProvider;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
-import de.agilecoders.wicket.core.settings.DefaultThemeProvider;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;

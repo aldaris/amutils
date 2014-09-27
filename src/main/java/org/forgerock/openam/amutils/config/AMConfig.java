@@ -28,13 +28,13 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.transform.sax.SAXSource;
-import org.apache.wicket.util.collections.MultiMap;
-import static org.forgerock.openam.amutils.config.ConfigConstants.*;
 import org.forgerock.amutils.sms.Service;
 import org.forgerock.amutils.sms.ServicesConfiguration;
 import org.forgerock.util.xml.XMLUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import static org.forgerock.openam.amutils.config.ConfigConstants.*;
 
 public class AMConfig implements Serializable {
 
@@ -63,5 +63,4 @@ public class AMConfig implements Serializable {
     public Service getService(String serviceName) {
         return services.get(serviceName);
     }
-
 }
