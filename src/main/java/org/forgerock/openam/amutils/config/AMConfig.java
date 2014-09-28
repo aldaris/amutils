@@ -15,11 +15,10 @@
  */
 package org.forgerock.openam.amutils.config;
 
+import org.forgerock.openam.amutils.config.processors.ServiceProcessor;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -30,6 +29,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.transform.sax.SAXSource;
 import org.forgerock.amutils.sms.Service;
 import org.forgerock.amutils.sms.ServicesConfiguration;
+import org.forgerock.openam.amutils.config.processors.PlatformServiceProcessor;
 import org.forgerock.util.xml.XMLUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,8 +38,12 @@ import static org.forgerock.openam.amutils.config.ConfigConstants.*;
 
 public class AMConfig implements Serializable {
 
-    private Map<String, Service> services = new HashMap<>();
-    private final List<ServiceProcessor> serviceProcessors = new ArrayList<>(1);
+    private final Map<String, ServiceProcessor> serviceProcessors = new HashMap<>();
+    private static final Map<String, Class<? extends ServiceProcessor>> REGISTRY = new HashMap<>();
+
+    static {
+        REGISTRY.put(PLATFORM_SERVICE, PlatformServiceProcessor.class);
+    }
 
     public AMConfig(InputStream is) {
         try {
@@ -50,17 +54,23 @@ public class AMConfig implements Serializable {
                     new SAXSource(saxParser.getXMLReader(), new InputSource(is)), ServicesConfiguration.class);
             ServicesConfiguration sc = sce.getValue();
             for (Service service : sc.getService()) {
-                if (INTERESTING_SERVICES.contains(service.getName())) {
-                    services.put(service.getName(), service);
+                Class<? extends ServiceProcessor> processorClass = REGISTRY.get(service.getName());
+                if (processorClass != null) {
+                    try {
+                        ServiceProcessor processor = processorClass.newInstance();
+                        processor.initialize(service);
+                    } catch (IllegalAccessException | InstantiationException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
-            System.out.println(services.keySet());
-        } catch (JAXBException | SAXException | ParserConfigurationException pe) {
-            pe.printStackTrace();
+            System.out.println(serviceProcessors);
+        } catch (JAXBException | SAXException | ParserConfigurationException ex) {
+            ex.printStackTrace();
         }
     }
 
-    public Service getService(String serviceName) {
-        return services.get(serviceName);
+    public ServiceProcessor getServiceProcessor(String serviceName) {
+        return serviceProcessors.get(serviceName);
     }
 }

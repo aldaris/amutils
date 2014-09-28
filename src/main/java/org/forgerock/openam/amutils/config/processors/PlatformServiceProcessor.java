@@ -13,9 +13,10 @@
  *
  * Copyright 2013-2014 ForgeRock AS.
  */
-package org.forgerock.openam.amutils.config;
+package org.forgerock.openam.amutils.config.processors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,27 +26,31 @@ import org.forgerock.amutils.sms.GlobalConfiguration;
 import org.forgerock.amutils.sms.Service;
 import org.forgerock.amutils.sms.SubConfiguration;
 
-import static org.forgerock.openam.amutils.config.ConfigConstants.SERVERS;
+import static org.forgerock.openam.amutils.config.ConfigConstants.*;
 
-public class PlatformSettings {
+public class PlatformServiceProcessor extends ServiceProcessor {
 
-    private final List<Server> servers = new ArrayList<>(10);
+    private final Map<String, Server> servers = new HashMap<>(10);
     private final Map<String, Site> sites = new HashMap<>(5);
 
-    public static void init(Service platformService) {
+    @Override
+    public void initialize(Service platformService) {
         GlobalConfiguration globalConfig = platformService.getConfiguration().getGlobalConfiguration().get(0);
         for (SubConfiguration subConfig : globalConfig.getSubConfiguration()) {
             if (SERVERS.equals(subConfig.getName())) {
-                processServer(subConfig);
+                processServers(subConfig);
             } else {
                 processSubConfig(subConfig);
             }
         }
     }
 
-    private static void processServer(SubConfiguration serversConfig) {
+    private void processServers(SubConfiguration serversConfig) {
         for (SubConfiguration server : serversConfig.getSubConfiguration()) {
-
+            String serverName = server.getName();
+            MultiMap<String, String> properties = processAttributes(server.getAttributeValuePair());
+            String serverId = properties.getFirstValue("serverid");
+            servers.put(serverId, new Server(serverName, properties));
         }
     }
 
@@ -56,14 +61,20 @@ public class PlatformSettings {
 
     private static final class Server {
 
+        private final String serverName;
         private final String serverId;
-        private final Site parentSite;
-        private final MultiMap<String, String> settings;
+        private final String parentSiteName;
+        private final List<String> settings;
+        private final String serverConfigXml;
 
-        public Server(String serverId, Site parentSite, MultiMap<String, String> settings) {
-            this.serverId = serverId;
-            this.parentSite = parentSite;
-            this.settings = settings;
+        public Server(String serverName, MultiMap<String, String> properties) {
+            this.serverName = serverName;
+            serverId = properties.getFirstValue("serverid");
+            parentSiteName = properties.getFirstValue("parentsiteid");
+            serverConfigXml = properties.getFirstValue("serverconfigxml");
+            List<String> sortedSettings = new ArrayList<>(properties.get("serverconfig"));
+            Collections.sort(sortedSettings);
+            settings = sortedSettings;
         }
     }
 

@@ -13,16 +13,19 @@
  *
  * Copyright 2013-2014 ForgeRock AS.
  */
-package org.forgerock.openam.amutils.config;
+package org.forgerock.openam.amutils.config.processors;
 
 import java.util.List;
 import org.apache.wicket.util.collections.MultiMap;
 import org.forgerock.amutils.sms.AttributeValuePair;
+import org.forgerock.amutils.sms.Service;
 import org.forgerock.amutils.sms.Value;
 
 public abstract class ServiceProcessor {
 
-    protected final MultiMap processAttributes(List<AttributeValuePair> attributes) {
+    public abstract void initialize(Service service);
+
+    protected final MultiMap<String, String> processAttributes(List<AttributeValuePair> attributes) {
         MultiMap<String, String> attrs = new MultiMap<>();
         for (AttributeValuePair avPair : attributes) {
             String key = avPair.getAttribute().getName();
